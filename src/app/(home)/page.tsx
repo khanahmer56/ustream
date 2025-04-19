@@ -1,8 +1,18 @@
-import React from "react";
+import { HydrateClient, trpc } from "@/trpc/server";
+import React, { Suspense } from "react";
+import PageClient from "./client";
+import { ErrorBoundary } from "react-error-boundary";
+import HomeView from "@/modules/home/ui/views/HomeView";
 
-const page = () => {
+interface PageProps {
+  searchParams: Promise<{ categoryId?: string }>;
+}
+const page = async ({ searchParams }: PageProps) => {
+  void trpc.categories.getMany.prefetch();
   return (
-    <div className="h-screen">hiiiii how are you i will uload video here</div>
+    <HydrateClient>
+      <HomeView categoryId={searchParams.categoryId} />
+    </HydrateClient>
   );
 };
 
